@@ -7,8 +7,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("api/Tiempos")
+@RequestMapping("api/tiempos")
 public class TiempoController {
+
     @Autowired
     private TiempoRepostitory repoTiempo;
 
@@ -35,6 +36,12 @@ public class TiempoController {
         Tiempo tiempo = toEntity(tiempoDTO);
         Tiempo modificado = serviceTiempo.updateTiempo(tiempo,id);
         return toDto(modificado);
+    }
+
+    @DeleteMapping("/{id}")
+    public String delete(@PathVariable Long id ){
+        repoTiempo.deleteById(id);
+        return "Se elimino el tiempo con el id_: " + id;
     }
 
     private TiempoDTO toDto(Tiempo tiempo){

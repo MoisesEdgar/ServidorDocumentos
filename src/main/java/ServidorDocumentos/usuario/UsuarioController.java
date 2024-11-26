@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("api/Usuarios")
+@RequestMapping("api/usuarios")
 public class UsuarioController {
     @Autowired
     private UsuarioRepository repoUsuario;
@@ -35,6 +35,12 @@ public class UsuarioController {
         Usuario usuario = toEntity(usuarioDTO);
         Usuario modificado = serviceUsuario.updateUsuario(usuario, id);
         return toDto(modificado);
+    }
+
+    @DeleteMapping("/{id}")
+    public String deleteById(@PathVariable Long id){
+        repoUsuario.deleteById(id);
+        return "Se elimino el usuario con id " + id;
     }
 
     private UsuarioDTO toDto(Usuario usuario){
