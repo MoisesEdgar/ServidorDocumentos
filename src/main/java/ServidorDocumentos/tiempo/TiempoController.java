@@ -17,7 +17,7 @@ public class TiempoController {
     private TiempoService serviceTiempo;
 
     @GetMapping
-    public List<TiempoDTO> getAll(){
+    public List<TiempoDTO> getAll() {
         List<Tiempo> tiempos = repoTiempo.findAll();
         return tiempos.stream()
                 .map(tiempo -> toDto(tiempo))
@@ -25,33 +25,33 @@ public class TiempoController {
     }
 
     @PostMapping
-    public TiempoDTO save(@RequestBody TiempoDTO tiempoDTO){
+    public TiempoDTO save(@RequestBody TiempoDTO tiempoDTO) {
         Tiempo tiempo = toEntity(tiempoDTO);
         Tiempo guardado = serviceTiempo.guardar(tiempo);
         return toDto(guardado);
     }
 
     @PutMapping("/{id}")
-    public TiempoDTO update(@RequestBody TiempoDTO tiempoDTO, @PathVariable Long id){
+    public TiempoDTO update(@RequestBody TiempoDTO tiempoDTO, @PathVariable Long id) {
         Tiempo tiempo = toEntity(tiempoDTO);
-        Tiempo modificado = serviceTiempo.updateTiempo(tiempo,id);
+        Tiempo modificado = serviceTiempo.updateTiempo(tiempo, id);
         return toDto(modificado);
     }
 
-    @DeleteMapping("/{id}")
-    public String delete(@PathVariable Long id ){
-        repoTiempo.deleteById(id);
-        return "Se elimino el tiempo con el id_: " + id;
-    }
+//    @DeleteMapping("/{id}")
+//    public String delete(@PathVariable Long id) {
+//        repoTiempo.deleteById(id);
+//        return "Se elimino el tiempo con el id_: " + id;
+//    }
 
-    private TiempoDTO toDto(Tiempo tiempo){
+    private TiempoDTO toDto(Tiempo tiempo) {
         TiempoDTO dto = new TiempoDTO();
         dto.id = tiempo.getId();
         dto.tiempo = tiempo.getTiempo();
         return dto;
     }
 
-    private Tiempo toEntity(TiempoDTO dto){
+    private Tiempo toEntity(TiempoDTO dto) {
         Tiempo tiempo = new Tiempo();
         tiempo.setId(dto.id);
         tiempo.setTiempo(dto.tiempo);

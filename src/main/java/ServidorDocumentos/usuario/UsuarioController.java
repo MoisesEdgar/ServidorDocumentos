@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("api/usuarios")
 public class UsuarioController {
+
     @Autowired
     private UsuarioRepository repoUsuario;
 
@@ -16,7 +17,7 @@ public class UsuarioController {
     private UsuarioService serviceUsuario;
 
     @GetMapping
-    public List<UsuarioDTO> getAll(){
+    public List<UsuarioDTO> getAll() {
         List<Usuario> usuarios = repoUsuario.findAll();
         return usuarios.stream()
                 .map(usuario -> toDto(usuario))
@@ -24,38 +25,38 @@ public class UsuarioController {
     }
 
     @PostMapping
-    public UsuarioDTO save(@RequestBody UsuarioDTO usuarioDTO){
+    public UsuarioDTO save(@RequestBody UsuarioDTO usuarioDTO) {
         Usuario usuario = toEntity(usuarioDTO);
         Usuario guardado = serviceUsuario.guardar(usuario);
         return toDto(guardado);
     }
 
     @PutMapping("/{id}")
-    public UsuarioDTO update(@RequestBody UsuarioDTO usuarioDTO, @PathVariable Long id){
+    public UsuarioDTO update(@RequestBody UsuarioDTO usuarioDTO, @PathVariable Long id) {
         Usuario usuario = toEntity(usuarioDTO);
         Usuario modificado = serviceUsuario.updateUsuario(usuario, id);
         return toDto(modificado);
     }
 
-    @DeleteMapping("/{id}")
-    public String deleteById(@PathVariable Long id){
-        repoUsuario.deleteById(id);
-        return "Se elimino el usuario con id " + id;
-    }
+//    @DeleteMapping("/{id}")
+//    public String deleteById(@PathVariable Long id) {
+//        repoUsuario.deleteById(id);
+//        return "Se elimino el usuario con id " + id;
+//    }
 
-    private UsuarioDTO toDto(Usuario usuario){
+    private UsuarioDTO toDto(Usuario usuario) {
         UsuarioDTO dto = new UsuarioDTO();
         dto.id = usuario.getId();
-        dto.usuario = usuario.getUsuario();
-        dto.contraseña = usuario.getContraseña();
+        dto.user = usuario.getUser();
+        dto.password = usuario.getPassword();
         return dto;
     }
 
-    private Usuario toEntity(UsuarioDTO dto){
+    private Usuario toEntity(UsuarioDTO dto) {
         Usuario usuario = new Usuario();
         usuario.setId(dto.id);
-        usuario.setUsuario(dto.usuario);
-        usuario.setContraseña(dto.contraseña);
+        usuario.setUser(dto.user);
+        usuario.setPassword(dto.password);
         return usuario;
     }
 }

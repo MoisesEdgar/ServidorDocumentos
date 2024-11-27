@@ -1,7 +1,7 @@
 package ServidorDocumentos.usuario;
 
-public class UsuarioDTO {
-    public Long id;
+public class UsuarioDTOConsulta {
     public String user;
     public String password;
 }
+

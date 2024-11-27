@@ -7,8 +7,8 @@ public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     private Long id;
-    private String usuario;
-    private String Contraseña;
+    private String user;
+    private String password;
 
     public Long getId() {
         return id;
@@ -18,19 +18,19 @@ public class Usuario {
         this.id = id;
     }
 
-    public String getUsuario() {
-        return usuario;
+    public String getUser() {
+        return user;
     }
 
-    public void setUsuario(String usuario) {
-        this.usuario = usuario;
+    public void setUser(String user) {
+        this.user = user;
     }
 
-    public String getContraseña() {
-        return Contraseña;
+    public String getPassword() {
+        return password;
     }
 
-    public void setContraseña(String contraseña) {
-        Contraseña = contraseña;
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

@@ -1,48 +1,41 @@
 package ServidorDocumentos.documento;
 
+import ServidorDocumentos.usuario.Usuario;
+import ServidorDocumentos.usuario.UsuarioDTOConsulta;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-
 @Service
 public class DocumentoService {
     private final RestTemplate restTemplate = new RestTemplate();
-    private final String url = "https://jsonplaceholder.typicode.com/posts";
+    private final String url = "";
 
-//    public Usuario getToken(Usuario usuario){
-//
-//        HttpEntity <Usuario> request = new HttpEntity<>(usuario);
-//        ResponseEntity<Usuario> response = restTemplate.exchange(url, HttpMethod.POST, request, Usuario.class);
-//
-//        //COMO OBTENER EL TOKEN DE LA RESPUESTA
-//
-//        return token;
-//    }
-//
-//    public List<DocumentoDTO> getDocumentosPendientes(String token){
-//        List<DocumentoDTO> documentos = new ArrayList<>();
-//        // COMO ENVIAR PETICION GET CON TOKEN INCLUIDO
-//
-//        return documentos;
-//    }
+    public String getToken(UsuarioDTOConsulta usuario) {
+        HttpEntity<UsuarioDTOConsulta> request = new HttpEntity<>(usuario);
+        ResponseEntity<UsuarioDTOConsulta> response = restTemplate.exchange(url, HttpMethod.POST, request, UsuarioDTOConsulta.class);
+        HttpHeaders headers = response.getHeaders();
+        String token = headers.getFirst("Authorization");
+        return token;
+    }
 
-        public ResponseEntity<DocumentoDTO[]> getDocumentosPendientes(){
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+    public ResponseEntity<DocumentoDTO[]> getDocumentosPendientes(String token) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + token);
+        HttpEntity request = new HttpEntity(headers);
 
-            HttpEntity request = new HttpEntity(headers);
+        ResponseEntity<DocumentoDTO[]> response = restTemplate.exchange(url, HttpMethod.GET, request, DocumentoDTO[].class);
+        System.out.print(response.getHeaders());
 
-            ResponseEntity<DocumentoDTO[]> response = restTemplate.exchange(url, HttpMethod.GET, request, DocumentoDTO[].class);
-
-            System.out.print(response.getHeaders());
-
-            return response;
+        if (response.getStatusCode() == HttpStatus.OK) {
+            System.out.println("Respuesta recibida: " + response.getBody());
+        } else {
+            System.out.println("Error en la petición GET: " + response.getStatusCode());
         }
-}
 
+        return response;
+    }
+}
 
 
