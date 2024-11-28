@@ -16,6 +16,7 @@ public class TiempoController {
     @Autowired
     private TiempoService serviceTiempo;
 
+
     @GetMapping
     public List<TiempoDTO> getAll() {
         List<Tiempo> tiempos = repoTiempo.findAll();

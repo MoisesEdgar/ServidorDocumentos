@@ -21,17 +21,17 @@ public class DocumentoController {
     private UsuarioRepository repoUsuario;
 
     @GetMapping
-    public ResponseEntity<DocumentoDTO[]> getAll() {
+    public DocumentoDTO[] getAll() {
         UsuarioDTOConsulta usuario = toDto(repoUsuario.findById(1l).orElseThrow(() -> new RuntimeException("No se encontro el usuario")));
         String token = serviceDocumento.getToken(usuario);
-
         ResponseEntity<DocumentoDTO[]> documentos = serviceDocumento.getDocumentosPendientes(token);
-        return documentos;
+
+        return documentos.getBody();
     }
 
     private UsuarioDTOConsulta toDto(Usuario usuario) {
         UsuarioDTOConsulta dto = new UsuarioDTOConsulta();
-        dto.user = usuario.getUser();
+        dto.email = usuario.getUser();
         dto.password = usuario.getPassword();
         return dto;
     }
