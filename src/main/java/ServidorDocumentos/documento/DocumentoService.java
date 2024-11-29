@@ -1,6 +1,8 @@
 package ServidorDocumentos.documento;
 
 import ServidorDocumentos.usuario.UsuarioDTOConsulta;
+import ServidorDocumentos.usuario.UsuarioRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
@@ -10,24 +12,27 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class DocumentoService {
+    @Autowired
+    private UsuarioRepository repoUsuario;
     private final RestTemplate restTemplate = new RestTemplate();
-    private final String url = "https://beneficial-reprieve-production.up.railway.app/login";
-    private final String url2 = "https://beneficial-reprieve-production.up.railway.app/api/totales/usuario?usuarioId=6";
+    private final String url = "https://beneficial-reprieve-production.up.railway.app";
+
+
+    public ResponseEntity<DocumentoDTO[]> autenticarYCargarDatos(UsuarioDTOConsulta usuario) {
+        String token = getToken(usuario);
+        return getDocumentosPendientes(token);
+    }
+
     public String getToken(UsuarioDTOConsulta usuario) {
         try {
-
             HttpEntity<UsuarioDTOConsulta> request = new HttpEntity<>(usuario);
-            ResponseEntity<UsuarioDTOConsulta> response = restTemplate.exchange(url, HttpMethod.POST, request, UsuarioDTOConsulta.class);
+            ResponseEntity<UsuarioDTOConsulta> response = restTemplate.exchange(url + "/login", HttpMethod.POST, request, UsuarioDTOConsulta.class);
             HttpHeaders headers = response.getHeaders();
-            String token = headers.getFirst("Authorization");
-            return token;
-
-        } catch (HttpServerErrorException e) {
-            throw new RuntimeException("Error en la consulta de los documentos: " + e.getStatusCode());
-        } catch (HttpClientErrorException e) {
-            throw new RuntimeException("Error en la consulta de los documentos: " + e.getStatusCode());
+            return headers.getFirst("Authorization");
+        } catch (HttpServerErrorException | HttpClientErrorException e) {
+            throw new RuntimeException("Error al obtener el token. Codigo de error: " + e.getStatusCode());
         } catch (Exception e) {
-            throw new RuntimeException("Error en la consulta de los documentos: " + e);
+            throw new RuntimeException("Error inesperado al obtener el token: " + e);
         }
     }
 
@@ -36,18 +41,23 @@ public class DocumentoService {
             HttpHeaders headers = new HttpHeaders();
             headers.set("Authorization", "Bearer " + token);
             HttpEntity request = new HttpEntity(headers);
-            ResponseEntity<DocumentoDTO[]> response = restTemplate.exchange(url2, HttpMethod.GET, request, DocumentoDTO[].class);
+            ResponseEntity<DocumentoDTO[]> response = restTemplate.exchange(url + "/api/totales", HttpMethod.GET, request, DocumentoDTO[].class);
             return response;
-
-        } catch (HttpServerErrorException e) {
-            throw new RuntimeException("Error en la consulta de los documentos: " + e.getStatusCode());
-        } catch (HttpClientErrorException e) {
-            throw new RuntimeException("Error en la consulta de los documentos: " + e.getStatusCode());
+        } catch (HttpServerErrorException | HttpClientErrorException e) {
+            throw new RuntimeException("Error al consultar los datos. Codigo de error: " + e.getStatusCode());
         } catch (Exception e) {
-            throw new RuntimeException("Error en la consulta de los documentos: " + e);
+            throw new RuntimeException("Error inesperado al consultar los datos: " + e);
         }
     }
-
 }
+
+
+
+
+
+
+
+
+
 
 

@@ -17,11 +17,9 @@ public class UsuarioController {
     private UsuarioService serviceUsuario;
 
     @GetMapping
-    public List<UsuarioDTO> getAll() {
-        List<Usuario> usuarios = repoUsuario.findAll();
-        return usuarios.stream()
-                .map(usuario -> toDto(usuario))
-                .collect(Collectors.toList());
+    public UsuarioDTO getAll() {
+        Usuario usuario = repoUsuario.findById(1l).orElseThrow(() -> new RuntimeException("No se encontro el usuario"));
+        return toDto(usuario);
     }
 
     @PostMapping
@@ -37,12 +35,6 @@ public class UsuarioController {
         Usuario modificado = serviceUsuario.updateUsuario(usuario, id);
         return toDto(modificado);
     }
-
-//    @DeleteMapping("/{id}")
-//    public String deleteById(@PathVariable Long id) {
-//        repoUsuario.deleteById(id);
-//        return "Se elimino el usuario con id " + id;
-//    }
 
     private UsuarioDTO toDto(Usuario usuario) {
         UsuarioDTO dto = new UsuarioDTO();

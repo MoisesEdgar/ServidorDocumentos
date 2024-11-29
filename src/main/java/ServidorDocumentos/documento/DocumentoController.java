@@ -4,7 +4,6 @@ import ServidorDocumentos.usuario.Usuario;
 import ServidorDocumentos.usuario.UsuarioDTOConsulta;
 import ServidorDocumentos.usuario.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,19 +22,15 @@ public class DocumentoController {
     @GetMapping
     public DocumentoDTO[] getAll() {
         UsuarioDTOConsulta usuario = toDto(repoUsuario.findById(1l).orElseThrow(() -> new RuntimeException("No se encontro el usuario")));
-        String token = serviceDocumento.getToken(usuario);
-        ResponseEntity<DocumentoDTO[]> documentos = serviceDocumento.getDocumentosPendientes(token);
-
-        return documentos.getBody();
+        return serviceDocumento.autenticarYCargarDatos(usuario).getBody();
     }
 
-    private UsuarioDTOConsulta toDto(Usuario usuario) {
+    public UsuarioDTOConsulta toDto(Usuario usuario) {
         UsuarioDTOConsulta dto = new UsuarioDTOConsulta();
         dto.email = usuario.getUser();
         dto.password = usuario.getPassword();
         return dto;
     }
-
 }
 
 

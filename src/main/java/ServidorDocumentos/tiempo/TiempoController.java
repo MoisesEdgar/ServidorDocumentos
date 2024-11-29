@@ -3,8 +3,6 @@ package ServidorDocumentos.tiempo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/tiempos")
@@ -18,11 +16,9 @@ public class TiempoController {
 
 
     @GetMapping
-    public List<TiempoDTO> getAll() {
-        List<Tiempo> tiempos = repoTiempo.findAll();
-        return tiempos.stream()
-                .map(tiempo -> toDto(tiempo))
-                .collect(Collectors.toList());
+    public TiempoDTO getAll() {
+        Tiempo tiempo = repoTiempo.findById(2l).orElseThrow(() -> new RuntimeException("No se encontro el tiempo"));
+        return toDto(tiempo);
     }
 
     @PostMapping
@@ -38,12 +34,6 @@ public class TiempoController {
         Tiempo modificado = serviceTiempo.updateTiempo(tiempo, id);
         return toDto(modificado);
     }
-
-//    @DeleteMapping("/{id}")
-//    public String delete(@PathVariable Long id) {
-//        repoTiempo.deleteById(id);
-//        return "Se elimino el tiempo con el id_: " + id;
-//    }
 
     private TiempoDTO toDto(Tiempo tiempo) {
         TiempoDTO dto = new TiempoDTO();
