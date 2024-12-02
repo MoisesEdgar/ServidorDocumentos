@@ -21,16 +21,10 @@ public class DocumentoController {
 
     @GetMapping
     public DocumentoDTO[] getAll() {
-        UsuarioDTOConsulta usuario = toDto(repoUsuario.findById(1l).orElseThrow(() -> new RuntimeException("No se encontro el usuario")));
+        UsuarioDTOConsulta usuario = serviceDocumento.toDto(repoUsuario.findById(1l).orElseThrow(() -> new RuntimeException("No se encontro el usuario")));
         return serviceDocumento.autenticarYCargarDatos(usuario).getBody();
     }
 
-    public UsuarioDTOConsulta toDto(Usuario usuario) {
-        UsuarioDTOConsulta dto = new UsuarioDTOConsulta();
-        dto.email = usuario.getUser();
-        dto.password = usuario.getPassword();
-        return dto;
-    }
 }
 
 
